@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)https://hbd-2-0.vercel.app/main.html -->
+<html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pookie's Pics</title>
+    <link rel="shortcut icon" href="https://hbd-2-0.vercel.app/icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="css2" rel="stylesheet">
+</head>
+<body>
+    <div id="drag-container" style="transform: rotateX(-65.3883deg) rotateY(30.332deg);">
+        <div id="spin-container" style="width: 120px; height: 170px; animation: 60s linear 0s infinite normal none running spinRevert;">
+            <img src="max1.jpg" alt="" style="transform: rotateY(0deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="max2.jpg" alt="" style="transform: rotateY(24deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="max3.jpg" alt="" style="transform: rotateY(48deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="max4.jpg" alt="" style="transform: rotateY(72deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="max5.jpg" alt="" style="transform: rotateY(96deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="max6.jpg" alt="" style="transform: rotateY(120deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="max7.jpg" alt="" style="transform: rotateY(144deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="max8.jpg" alt="" style="transform: rotateY(168deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="max9.jpg" alt="" style="transform: rotateY(192deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="min1.jpg" alt="" style="transform: rotateY(216deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="min2.jpg" alt="" style="transform: rotateY(240deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="min3.jpg" alt="" style="transform: rotateY(264deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="min4.jpg" alt="" style="transform: rotateY(288deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="min5.jpg" alt="" style="transform: rotateY(312deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <img src="min6.jpg" alt="" style="transform: rotateY(336deg) translateZ(240px); transition: transform 1s 0.25s;">
+            <p>HAPPY PORATHU THOLAICHA NALLU HANI</p>
+        </div>
+        <div id="ground" style="width: 720px; height: 720px;"></div>
+    </div>
+    
+    <div id="music-container">
+        <audio src="myaudio" controls="" autoplay="" loop="">    
+<p>If you are reading this, it is because your browser does not support the audio element.</p>
+</audio>
+</div>
+    <!-- <div id="canva">
+        <canvas id="canvas"></canvas>
+    </div> -->
+
+    <!-- Audio tự động phát -->
+    <audio id="myAudio" autoplay="" playsinline="">
+        <source src="myaudio.mp3" type="audio/mpeg">
+        <source src="myaudio.ogg" type="audio/ogg">
+    </audio>
+
+    <script src="main.js.download"></script>
+
+    <script>
+        window.onload = function() {
+            var audio = document.getElementById("myAudio");
+            audio.muted = false;
+            audio.play().catch(function(e) {
+                console.log('Audio playback failed:', e);
+            });
+
+            // Hiệu ứng pháo hoa và trái tim
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            function random(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            function Firework(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = random(2, 4);
+                this.color = `hsl(${random(0, 360)}, 100%, 50%)`;
+                this.vx = random(-3, 3);
+                this.vy = random(-3, 3);
+                this.life = 100;
+            }
+
+            Firework.prototype.draw = function () {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            };
+
+            Firework.prototype.update = function () {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life--;
+            };
+
+            function Heart(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = random(20, 40);
+                this.color = 'red';
+                this.vy = random(-2, -1);
+                this.opacity = 1;
+            }
+
+            Heart.prototype.draw = function () {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.bezierCurveTo(this.x - this.size / 2, this.y - this.size / 2, this.x - this.size, this.y + this.size / 3, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x + this.size, this.y + this.size / 3, this.x + this.size / 2, this.y - this.size / 2, this.x, this.y);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            };
+
+            Heart.prototype.update = function () {
+                this.y += this.vy;
+                this.opacity -= 0.01;
+            };
+
+            let fireworks = [];
+            let hearts = [];
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                if (Math.random() < 0.1) {
+                    fireworks.push(new Firework(random(0, canvas.width), random(0, canvas.height)));
+                }
+                if (Math.random() < 0.05) {
+                    hearts.push(new Heart(random(0, canvas.width), canvas.height));
+                }
+
+                fireworks.forEach((firework, index) => {
+                    firework.draw();
+                    firework.update();
+                    if (firework.life <= 0) {
+                        fireworks.splice(index, 1);
+                    }
+                });
+
+                hearts.forEach((heart, index) => {
+                    heart.draw();
+                    heart.update();
+                    if (heart.opacity <= 0) {
+                        hearts.splice(index, 1);
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+            animate();
+        };
+    </script>
+
+
+</body></html>
